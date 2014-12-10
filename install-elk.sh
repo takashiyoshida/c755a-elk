@@ -1,5 +1,16 @@
 #!/bin/sh
 
+# Enable the following if your development machine is behind a proxy
+#PROXY_URL=""
+#PROXY_USER=""
+#PROXY_PASSWORD=""
+
+#export http_proxy="http://${PROXY_USER}:${PROXY_PASSWORD}@${PROXY_URL}"
+#export https_proxy=${http_proxy}
+
+#wget configuration
+#WGET_PROXY="--no-check-certificate -e use_proxy=yes -e http_proxy=${PROXY_URL} --proxy-user=${PROXY_USER} --proxy-password=${PROXY_PASSWORD}"
+
 echo "Running apt-get update..."
 apt-get update > /dev/null
 
@@ -18,7 +29,7 @@ if [ -f "/home/vagrant/${LS_TARBALL}" ]; then
 	echo "Skipping download of ${LS_TARBALL}"
 else
 	echo "Downloading ${LS_TARBALL}..."
-	wget -nv "${LS_URL}/${LS_TARBALL}"
+	wget -nv ${WGET_PROXY} "${LS_URL}/${LS_TARBALL}" > /dev/null
 	tar xzf ${LS_TARBALL}
 fi
 
@@ -37,7 +48,7 @@ if [ -f "/home/vagrant/${ES_TARBALL}" ]; then
 	echo "Skipping download of ${ES_TARBALL}"
 else
 	echo "Downloading ${ES_TARBALL}..."
-	wget -nv "${ES_URL}/${ES_TARBALL}" > /dev/null
+	wget -nv ${WGET_PROXY} "${ES_URL}/${ES_TARBALL}" > /dev/null
 fi
 
 dpkg -i /home/vagrant/${ES_TARBALL}
@@ -67,7 +78,7 @@ if [ -f "/home/vagrant/${KI_TARBALL}" ]; then
 	echo "Skipping download of ${KI_TARBALL}"
 else
 	echo "Downloading ${KI_TARBALL}"
-	wget -nv "${KI_URL}/${KI_TARBALL}" > /dev/null
+	wget -nv ${WGET_PROXY} "${KI_URL}/${KI_TARBALL}" > /dev/null
 fi
 
 echo "Installing Kibana to /usr/share/nginx/html..."
