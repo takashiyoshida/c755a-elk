@@ -10,21 +10,23 @@ echo "Installing nginx..."
 apt-get install nginx -y > /dev/null
 
 # Logstash related variables
-LS_VERSION="1.4.2"
-LS_URL="https://download.elasticsearch.org/logstash/logstash"
-LS_TARBALL="logstash-${LS_VERSION}.tar.gz"
+LS_VERSION="1.5.2-1"
+LS_URL="https://download.elastic.co/logstash/logstash/packages/debian"
+LS_TARBALL="logstash_${LS_VERSION}_all.deb"
 
 if [ -f "/home/vagrant/${LS_TARBALL}" ]; then
 	echo "Skipping download of ${LS_TARBALL}"
 else
 	echo "Downloading ${LS_TARBALL}..."
 	wget -nv "${LS_URL}/${LS_TARBALL}"
-	tar xzf ${LS_TARBALL}
+	#tar xzf ${LS_TARBALL}
 fi
 
+dpkg -i /home/vagrant/${LS_TARBALL}
+
 # ElasticSearch related variables
-ES_VERSION="1.4.1"
-ES_URL="https://download.elasticsearch.org/elasticsearch/elasticsearch"
+ES_VERSION="1.6.0"
+ES_URL="https://download.elastic.co/elasticsearch/elasticsearch"
 ES_TARBALL="elasticsearch-${ES_VERSION}.deb"
 
 ES_YML="/etc/elasticsearch/elasticsearch.yml"
@@ -59,9 +61,9 @@ fi
 # Download Kibana
 
 # Kibana related variables
-KI_VERSION="3.1.2"
-KI_URL="https://download.elasticsearch.org/kibana/kibana"
-KI_TARBALL="kibana-${KI_VERSION}.tar.gz"
+KI_VERSION="4.1.1"	
+KI_URL="https://download.elastic.co/kibana/kibana"
+KI_TARBALL="kibana-${KI_VERSION}-linux-x64.tar.gz"
 
 if [ -f "/home/vagrant/${KI_TARBALL}" ]; then
 	echo "Skipping download of ${KI_TARBALL}"
@@ -72,3 +74,8 @@ fi
 
 echo "Installing Kibana to /usr/share/nginx/html..."
 tar xzf /home/vagrant/${KI_TARBALL} -C /usr/share/nginx/html --strip-components=1
+
+mkdir -p /var/run/elasticsearch
+
+update-rc.d elasticsearch defaults 95 10
+/etc/init.d/elasticsearch start
