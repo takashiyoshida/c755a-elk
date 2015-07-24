@@ -1,0 +1,8 @@
+ENVIRON [A-Z]{6}
+LOCATION [A-Z]{3}
+ASSETNAME [A-Z]{3}/%{LOCATION}/[A-Z0-9]{3}/[A-Z0-9]{5}
+NAME [\w\s]+
+ATTRIBUTE [\w\s]+
+STATE \w+
+DESC %{NAME}: %{ATTRIBUTE:attr};%{STATE:state}
+SMP_MESSAGE %{ENVIRON:environ}\s+%{DATESTAMP:timestamp}\s+%{ASSETNAME}\s+%{DESC}(;%{LOCATION})?
