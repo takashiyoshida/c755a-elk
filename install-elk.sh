@@ -56,6 +56,9 @@ if [ "$?" != "0" ]; then
 	echo "${ES_HTTP_CORS_ENABLED}: ${ES_HTTP_CORS_ENABLED_VAL}" >> ${ES_YML}
 fi
 
+mkdir -p /var/run/elasticsearch
+
+update-rc.d elasticsearch defaults 95 10
 /etc/init.d/elasticsearch start
 
 # Download Kibana
@@ -72,10 +75,5 @@ else
 	wget -nv "${KI_URL}/${KI_TARBALL}" > /dev/null
 fi
 
-echo "Installing Kibana to /usr/share/nginx/html..."
-tar xzf /home/vagrant/${KI_TARBALL} -C /usr/share/nginx/html --strip-components=1
-
-mkdir -p /var/run/elasticsearch
-
-update-rc.d elasticsearch defaults 95 10
-/etc/init.d/elasticsearch start
+echo "Installing Kibana to /home/vagrant..."
+tar xzf /home/vagrant/${KI_TARBALL}
